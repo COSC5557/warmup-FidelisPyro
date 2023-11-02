@@ -3,8 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import PolynomialFeatures
 
 # Path to my csv file
 path = "/project/arcc-students/klofthus/p_ML/warmup-FidelisPyro/winequality-red.csv"
@@ -18,42 +20,34 @@ corr_matrix = df.corr()
 # Select the most important features relative to the target
 important_features = corr_matrix['quality'].sort_values(ascending = False)[1:6].index.tolist()
 
+# Trying combinations of features with PolynomialFeatures
+poly = PolynomialFeatures(degree = 2, include_bias = False)
+
 # Create a new dataframe without the quality column
 #X = df.drop('quality', axis = 1)
-X = df[important_features]
+x = df[important_features]
 y = df['quality']
+x_poly = poly.fit_transform(x)
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
-print(f"X_train shape: {X_train.shape}, y_train shape: {y_train.shape}")
-print(f"X_test shape: {X_test.shape}, y_test shape: {y_test.shape}")
+x_train, x_test, y_train, y_test = train_test_split(x_poly, y, test_size = 0.2, random_state = 42)
+print(f"X_train shape: {x_train.shape}, y_train shape: {y_train.shape}")
+print(f"X_test shape: {x_test.shape}, y_test shape: {y_test.shape}")
 
-# Create a dictionary of hyperparameters to search
-param_grid = {
-    'n_estimators': [50, 100, 200],
-    'max_depth': [5, 10, 20],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4],
-}
+# Create a linear regression model
+model = LinearRegression()
 
-# Create a random forest regressor model
-model = RandomForestRegressor(random_state = 42)
+# Testing 5-fold cross validation
+scores = cross_val_score(model, x_train, y_train, cv = 10)
 
-# Search for the best hyperparameters
-grid_search = GridSearchCV(estimator = model, param_grid = param_grid, cv = 5, n_jobs = -1, verbose = 2)
-grid_search.fit(X_train, y_train)
+print(f"Cross Validation Scores: {scores}")
+print(f"Mean Cross Validation Score: {np.mean(scores)}")
 
 # Fit the model to the training data
-#model.fit(X_train, y_train)
+model.fit(x_train, y_train)
 
 # Make predictions on the test data
-#y_pred = model.predict(X_test)
-
-print(f"Best parameters: {grid_search.best_params_}")
-
-best_model = grid_search.best_estimator_
-y_pred = best_model.predict(X_test)
-
+y_pred = model.predict(x_test)
 
 # Calculate the mean squared error and r2 score
 mse = mean_squared_error(y_test, y_pred)
@@ -61,7 +55,6 @@ r2 = r2_score(y_test, y_pred)
 
 print(f"Mean Squared Error: {mse}")
 print(f"R2 Score: {r2}")
-
 
 plt.plot(y_test, y_pred)
 plt.xlabel("Actual Quality")
