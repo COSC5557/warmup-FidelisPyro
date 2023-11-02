@@ -21,6 +21,7 @@ classification problem. Evaluate the performance of your trained model again.
 
 Upload your code and a brief description of your results.
 
+Linear Regression:
 Using LinearRegression on the red wine dataset I got a MSE and R2:  
 Mean Squared Error: 0.45000046789225695  
 R2 Score: 0.3114056110795572  
@@ -48,4 +49,14 @@ Mean Squared Error: 0.4361822020067934
 R2 Score: 0.3325504343236504  
 
 This showed improvement, though still very minor improvement.
+
+
+Classification:  
+Using random forest was able to get the following results:  
+Accuracy: 0.746875  
+Confusion matrix:  
+[[  0   0   5]    miscalculating all 5 low quality as high quality  
+ [  0 108  33]    correctly calculating 108 medium quality  
+ [  0  43 131]]   correctly calculating 131 high quality  
+
 
