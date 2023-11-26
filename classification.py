@@ -5,17 +5,17 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.preprocessing import LabelEncoder
 
 # Path to my csv file
-path = "/project/arcc-students/klofthus/p_ML/warmup-FidelisPyro/winequality-red.csv"
+path = "/mnt/c/Users/kylel/Programming/School/PracticalML/wine+quality/winequality-red.csv"
 
 # Read csv file into a pandas dataframe
 df = pd.read_csv(path, delimiter = ";")
 
-# Bin the quality scores into categories
-bins = [0, 5, 7, 10]
-labels = ['low', 'medium', 'high']
-df['quality_category'] = pd.cut(df['quality'], bins=bins, labels=labels)
+
+
+
 
 # Calculate the correlation matrix
 corr_matrix = df.corr()
@@ -26,8 +26,8 @@ important_features = corr_matrix['quality'].sort_values(ascending = False)[1:6].
 # Create a new dataframe without the quality column
 #X = df.drop('quality', axis = 1)
 X = df[important_features]
-#y = df['quality']
-y = df['quality_category']
+y = df['quality']
+#y = df['quality_category']
 
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
@@ -79,9 +79,9 @@ confusion = confusion_matrix(y_test, y_pred)
 print(f"Accuracy: {accuracy}")
 print(f"Confusion matrix:\n{confusion}")
 
-sns.heatmap(confusion, annot=True, cmap="Blues")
+sns.heatmap(confusion, annot=True, cmap="Blues", fmt="d")
 plt.xlabel("Actual Quality")
 plt.ylabel("Predicted Quality")
 plt.title("Confusion Matrix")
-plt.show()
+plt.savefig('Confusion_matrix.png')
 
