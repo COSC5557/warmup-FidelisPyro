@@ -52,11 +52,10 @@ This showed improvement, though still very minor improvement.
 
 
 Classification:  
-Using random forest was able to get the following results:  
-Accuracy: 0.746875  
-Confusion matrix:  
-[[  0   0   5]    miscalculating all 5 low quality as high quality  
- [  0 108  33]    correctly calculating 108 medium quality  
- [  0  43 131]]   correctly calculating 131 high quality  
+While working on the algorithm selection I had some issues and realized I didn't need  
+to create the quality_classification I had used, and could use the quality that was  
+already in the csv. Using that my accuracy dropped from ~74.7% down to ~62.5%. Increasing  
+number of classes for the quality lowered my accuracy, which makes since. I also uploaded  
+a png of the confusion matrix instead of typing it out here.
 
 
