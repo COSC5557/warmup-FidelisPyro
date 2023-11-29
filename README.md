@@ -20,3 +20,8 @@ classification problem. Evaluate the performance of your trained model again.
 ## Submission
 
 Upload your code and a brief description of your results.
+
+I have removed the comments here since I go into more detail about my process  
+in the Linear_Regression_and_Classification_report.pdf
+
+
